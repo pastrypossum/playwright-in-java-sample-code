@@ -9,28 +9,47 @@ import com.serenitydojo.playwright.toolshop.domain.User;
 import com.serenitydojo.playwright.toolshop.fixtures.ChromeHeadlessOptions;
 import com.serenitydojo.playwright.toolshop.fixtures.TakesFinalScreenshot;
 import com.serenitydojo.playwright.toolshop.fixtures.WithTracing;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import net.serenitybdd.annotations.Feature;
+import net.serenitybdd.annotations.Steps;
+import net.serenitybdd.annotations.Story;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import net.serenitybdd.playwright.PlaywrightSerenity;
+import net.serenitybdd.playwright.junit5.SerenityPlaywrightExtension;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
-@DisplayName("Purchase")
-@Feature("Purchase")
+@ExtendWith(SerenityJUnit5Extension.class)
+@ExtendWith(SerenityPlaywrightExtension.class)
 @UsePlaywright(ChromeHeadlessOptions.class)
+@DisplayName("Purchase")
+@Feature("Purchases")
 public class PurchaseTest implements TakesFinalScreenshot, WithTracing {
 
+    @Steps
     SearchComponent searchComponent;
+
+    @Steps
     ProductList productList;
+
+    @Steps
     ProductDetails productDetails;
+
+    @Steps
     NavBar navBar;
+
+    @Steps
     ShoppingCart shoppingCart;
 
+    @Steps
     AuthenticationWorkflow authentication;
+
+    @Steps
     PurchaseWorkflow purchases;
 
     @BeforeEach
@@ -40,16 +59,7 @@ public class PurchaseTest implements TakesFinalScreenshot, WithTracing {
 
     @BeforeEach
     void setUp(Page page) {
-        searchComponent = new SearchComponent(page);
-        productList = new ProductList(page);
-        productDetails = new ProductDetails(page);
-        navBar = new NavBar(page);
-        shoppingCart = new ShoppingCart(page);
-
-        authentication = new AuthenticationWorkflow(page);
-        purchases = new PurchaseWorkflow(page);
-
-
+        PlaywrightSerenity.registerPage(page);
     }
 
     @Story("Purchase items")
@@ -65,8 +75,8 @@ public class PurchaseTest implements TakesFinalScreenshot, WithTracing {
             authentication.loginAs(sharon);
 
             // When she adds 2 items to the cart
-            purchases.addProductToCart("Combination Pliers", 2);
-            purchases.addProductToCart("Claw Hammer with Fiberglass Handle", 1);
+            purchases.addProductToCart("Bolt Cutters", 2);
+            purchases.addProductToCart("Slip Joint Pliers", 1);
 
             // And she checks out
             purchases.checkOutCart();
@@ -87,8 +97,8 @@ public class PurchaseTest implements TakesFinalScreenshot, WithTracing {
             User sharon = authentication.registerUserCalled("Sharon");
 
             // When she adds 2 items to the cart
-            purchases.addProductToCart("Combination Pliers", 2);
-            purchases.addProductToCart("Claw Hammer with Fiberglass Handle", 1);
+            purchases.addProductToCart("Bolt Cutters", 2);
+            purchases.addProductToCart("Slip Joint Pliers", 1);
 
             // And she checks out
             purchases.checkOutCart();

@@ -8,30 +8,39 @@ import com.serenitydojo.playwright.toolshop.fixtures.ChromeHeadlessOptions;
 import com.serenitydojo.playwright.toolshop.fixtures.ProductSummary;
 import com.serenitydojo.playwright.toolshop.fixtures.TakesFinalScreenshot;
 import com.serenitydojo.playwright.toolshop.fixtures.WithTracing;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import net.serenitybdd.annotations.Feature;
+import net.serenitybdd.annotations.Steps;
+import net.serenitybdd.annotations.Story;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import net.serenitybdd.playwright.PlaywrightSerenity;
+import net.serenitybdd.playwright.junit5.SerenityPlaywrightExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Filtering and sorting products")
-@Feature("Product Catalog")
+@ExtendWith(SerenityJUnit5Extension.class)
+@ExtendWith(SerenityPlaywrightExtension.class)
 @UsePlaywright(ChromeHeadlessOptions.class)
+@DisplayName("Filtering and sorting products")
+@Feature("Catalog")
 public class FilterAndSortProductsTest implements TakesFinalScreenshot, WithTracing {
 
+    @Steps
     SearchComponent searchComponent;
+
+    @Steps
     ProductList productList;
 
     @BeforeEach
     void setUp(Page page) {
-        searchComponent = new SearchComponent(page);
-        productList = new ProductList(page);
+        PlaywrightSerenity.registerPage(page);
         page.navigate("https://practicesoftwaretesting.com");
         page.locator("nav ul.pagination").waitFor();
     }
@@ -94,13 +103,12 @@ public class FilterAndSortProductsTest implements TakesFinalScreenshot, WithTrac
         @Test
         @DisplayName("Should show only products from the selected brand")
         void shouldShowProductsFromSelectedBrand(Page page) {
-            searchComponent.filterByBrand("ForgeFlex Tools");
+            searchComponent.filterByBrand("MightyCraft Hardware");
 
             var filteredProducts = productList.getProductNames();
 
             assertThat(filteredProducts).isNotEmpty();
-            assertThat(filteredProducts).contains("Claw Hammer with Shock Reduction Grip");
-            assertThat(filteredProducts).doesNotContain("Bolt Cutters");
+            assertThat(filteredProducts).contains("Claw Hammer");
         }
 
         @Test

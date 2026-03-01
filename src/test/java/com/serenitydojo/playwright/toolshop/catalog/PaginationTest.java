@@ -8,29 +8,39 @@ import com.serenitydojo.playwright.toolshop.catalog.pageobjects.SearchComponent;
 import com.serenitydojo.playwright.toolshop.fixtures.ChromeHeadlessOptions;
 import com.serenitydojo.playwright.toolshop.fixtures.TakesFinalScreenshot;
 import com.serenitydojo.playwright.toolshop.fixtures.WithTracing;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
+import net.serenitybdd.annotations.Feature;
+import net.serenitybdd.annotations.Steps;
+import net.serenitybdd.annotations.Story;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import net.serenitybdd.playwright.PlaywrightSerenity;
+import net.serenitybdd.playwright.junit5.SerenityPlaywrightExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Product catalog pagination")
-@Feature("Product Catalog")
+@ExtendWith(SerenityJUnit5Extension.class)
+@ExtendWith(SerenityPlaywrightExtension.class)
 @UsePlaywright(ChromeHeadlessOptions.class)
+@DisplayName("Product catalog pagination")
+@Feature("Catalog")
 public class PaginationTest implements TakesFinalScreenshot, WithTracing {
 
+    @Steps
     PaginationComponent paginationComponent;
+
+    @Steps
     ProductList productList;
+
+    @Steps
     SearchComponent searchComponent;
 
     @BeforeEach
     void setUp(Page page) {
-        paginationComponent = new PaginationComponent(page);
-        productList = new ProductList(page);
-        searchComponent = new SearchComponent(page);
+        PlaywrightSerenity.registerPage(page);
         page.navigate("https://practicesoftwaretesting.com");
         page.locator("nav ul.pagination").waitFor();
     }

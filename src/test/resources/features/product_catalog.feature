@@ -7,6 +7,7 @@ Feature: Product Catalog
   Sally is an online shopper
 
   Rule: Customers should be able to search for products by name
+    @current
     Example: The one where Sally searches for an Adjustable Wrench
       Given Sally is on the home page
       When she searches for "Adjustable Wrench"

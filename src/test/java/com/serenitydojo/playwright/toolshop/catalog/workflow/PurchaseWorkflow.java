@@ -2,31 +2,25 @@ package com.serenitydojo.playwright.toolshop.catalog.workflow;
 
 import com.microsoft.playwright.Page;
 import com.serenitydojo.playwright.toolshop.catalog.pageobjects.*;
-import io.qameta.allure.Step;
+import net.serenitybdd.annotations.Step;
+import net.serenitybdd.annotations.Steps;
 
 public class PurchaseWorkflow {
 
     Page page;
-    NavBar navBar;
-    SearchComponent searchComponent;
-    ProductList productList;
-    ProductDetails productDetails;
-    ShoppingCart shoppingCart;
-    AddressForm addressForm;
-    PaymentForm paymentForm;
+    @Steps NavBar navBar;
+    @Steps SearchComponent searchComponent;
+    @Steps ProductList productList;
+    @Steps ProductDetails productDetails;
+    @Steps ShoppingCart shoppingCart;
+    @Steps AddressForm addressForm;
+    @Steps PaymentForm paymentForm;
 
     public PurchaseWorkflow(Page page) {
         this.page = page;
-        this.navBar = new NavBar(page);
-        this.searchComponent = new SearchComponent(page);
-        this.productList = new ProductList(page);
-        this.productDetails = new ProductDetails(page);
-        this.shoppingCart = new ShoppingCart(page);
-        this.addressForm = new AddressForm(page);
-        this.paymentForm = new PaymentForm(page);
     }
 
-    @Step("Add product to cart")
+    @Step("Add {1} x '{0}' to cart")
     public void addProductToCart(String productName, int quantity) {
         navBar.openHomePage();
         searchComponent.searchBy(productName);
@@ -41,6 +35,7 @@ public class PurchaseWorkflow {
         shoppingCart.proceedToCheckout();
     }
 
+    @Step("Proceed to checkout after authentication")
     public void proceedToCheckoutAfterAuthentication() {
         shoppingCart.proceedToCheckoutAfterAuthentication();
     }
@@ -50,7 +45,7 @@ public class PurchaseWorkflow {
         addressForm.confirmAddress();
     }
 
-    @Step("Choose payment method")
+    @Step("Choose payment method '{0}'")
     public void choosePaymentMethod(String paymentMethod) {
         paymentForm.choosePaymentMethod(paymentMethod);
     }

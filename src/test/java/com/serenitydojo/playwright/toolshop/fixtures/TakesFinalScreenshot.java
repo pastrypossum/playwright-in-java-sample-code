@@ -7,6 +7,6 @@ public interface TakesFinalScreenshot {
 
     @AfterEach
     default void takeScreenshot(Page page)  {
-        ScreenshotManager.takeScreenshot(page, "Final screenshot");
+        page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
     }
 }

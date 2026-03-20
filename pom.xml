@@ -15,7 +15,7 @@
         <cucumber.version>7.34.2</cucumber.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.9.21</aspectj.version>
-        <serenity.version>5.3.5-SNAPSHOT</serenity.version>
+        <serenity.version>5.3.7</serenity.version>
     </properties>
 
     <dependencyManagement>

@@ -1,6 +1,7 @@
 package com.serenitydojo.playwright.locators;
 
-import com.serenitydojo.playwright.PlaywrightTest;
+import com.serenitydojo.playwright.PlaywrightTestMultiThread;
+import com.serenitydojo.playwright.PlaywrightTestSingleThread;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PlaywrightLocatorCollectionTest extends PlaywrightTest {
+public class PlaywrightLocatorCollectionTest extends PlaywrightTestMultiThread {
 
     @DisplayName("Using collections of items")
     @Nested

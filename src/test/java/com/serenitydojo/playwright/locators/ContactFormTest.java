@@ -3,7 +3,8 @@ package com.serenitydojo.playwright.locators;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.microsoft.playwright.options.AriaRole;
-import com.serenitydojo.playwright.PlaywrightTest;
+import com.serenitydojo.playwright.PlaywrightTestMultiThread;
+import com.serenitydojo.playwright.PlaywrightTestSingleThread;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class ContactFormTest extends PlaywrightTest {
+public class ContactFormTest extends PlaywrightTestMultiThread {
 
     @DisplayName("Submit contact form")
     @Nested

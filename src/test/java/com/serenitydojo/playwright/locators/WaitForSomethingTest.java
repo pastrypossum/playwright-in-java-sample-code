@@ -4,7 +4,8 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import com.serenitydojo.playwright.PlaywrightTest;
+import com.serenitydojo.playwright.PlaywrightTestMultiThread;
+import com.serenitydojo.playwright.PlaywrightTestSingleThread;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WaitForSomethingTest extends PlaywrightTest {
+public class WaitForSomethingTest extends PlaywrightTestMultiThread {
 
     @DisplayName("Check for loaded product list")
     @Nested
@@ -24,7 +25,6 @@ public class WaitForSomethingTest extends PlaywrightTest {
         @BeforeEach
         public void setUp() {
             page.navigate("https://practicesoftwaretesting.com/");
-//            page.waitForSelector("[data-test=product-name]");
             page.waitForSelector(".card-img-top");
         }
 

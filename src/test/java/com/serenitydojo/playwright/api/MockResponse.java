@@ -1,6 +1,6 @@
 package com.serenitydojo.playwright.api;
 
-public class MockAPIResponse {
+public class MockResponse {
 
     public static final String RESPONSE = """
                 {

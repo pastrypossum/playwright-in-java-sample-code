@@ -2,12 +2,13 @@ package com.serenitydojo.playwright;
 
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Arrays;
 
-public class PlaywrightTest {
+public class PlaywrightTestSingleThread {
 
     private static final String BASE_URL_UI = "https://practicesoftwaretesting.com/";
     private static final String BASE_URL_API = "https://api.practicesoftwaretesting.com/";
@@ -19,7 +20,6 @@ public class PlaywrightTest {
 
     @BeforeAll
     public static void setUpClass() {
-
         playwright = Playwright.create();
         playwright.selectors().setTestIdAttribute("data-test");
         browser = playwright.chromium().launch(
@@ -27,19 +27,29 @@ public class PlaywrightTest {
                         .setHeadless(false)
                         .setArgs(Arrays.asList("--no-sandbox", "--start-maximized"))
         );
-        context = browser.newContext();
     }
 
     @BeforeEach
-    public void setUp() {
+    public void beforeEachTest() {
+        context = browser.newContext();
         page = context.newPage();
         page.navigate("https://practicesoftwaretesting.com/");
     }
 
+    @AfterEach
+    public void afterEachTest() {
+        if(context != null) {
+            context.close();
+        }
+    }
+
     @AfterAll
     public static void tearDown() {
-        browser.close();
-        context.close();
-        playwright.close();
+        if(browser != null) {
+            browser.close();
+        }
+        if(playwright != null) {
+            playwright.close();
+        }
     }
 }

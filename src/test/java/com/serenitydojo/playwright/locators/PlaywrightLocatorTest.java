@@ -3,14 +3,15 @@ package com.serenitydojo.playwright.locators;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.microsoft.playwright.options.AriaRole;
-import com.serenitydojo.playwright.PlaywrightTest;
+import com.serenitydojo.playwright.PlaywrightTestMultiThread;
+import com.serenitydojo.playwright.PlaywrightTestSingleThread;
 import org.junit.jupiter.api.*;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class PlaywrightLocatorTest extends PlaywrightTest {
+public class PlaywrightLocatorTest extends PlaywrightTestMultiThread {
 
     @DisplayName("Locating elements by text")
     @Nested

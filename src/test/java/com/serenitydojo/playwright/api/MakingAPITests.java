@@ -30,11 +30,11 @@ public class MakingAPITests {
     private static APIRequestContext apiRequestContext;
     private static Playwright playwright;
     private static Browser browser;
-    private static BrowserContext context;
+    private BrowserContext context;
     private Page page;
 
     @BeforeAll
-    public static void setUpClass() {
+    public static void beforeAll() {
 
         playwright = Playwright.create();
         playwright.selectors().setTestIdAttribute("data-test");
@@ -43,13 +43,36 @@ public class MakingAPITests {
                         .setHeadless(false)
                         .setArgs(Arrays.asList("--no-sandbox", "--start-maximized"))
         );
-        context = browser.newContext();
+
         apiRequestContext = playwright.request().newContext(
                 new APIRequest.NewContextOptions().setBaseURL(BASE_URL_API)
                         .setExtraHTTPHeaders(new HashMap<>() {{
                             put("Accept", "application/json");
                         }})
         );
+    }
+
+    @BeforeEach
+    public void setUpTest() {
+        context = browser.newContext();
+        page = context.newPage();
+        page.navigate(BASE_URL_UI);
+    }
+
+    @AfterEach
+    public void tearDownTest(){
+        context.close();
+    }
+
+    @AfterAll
+    public static void afterAll() {
+
+        if(apiRequestContext != null) {
+            apiRequestContext.dispose();
+        }
+
+        browser.close();
+        playwright.close();
     }
 
     // milestone assertion
@@ -69,26 +92,25 @@ public class MakingAPITests {
                 });
     }
 
-    @BeforeEach
-    public void setUp() {
-        page = context.newPage();
+    @DisplayName("Mocking an API response")
+    @Test
+    void shouldReturnLaserGun(Page page) {
+
+        page.route("**/products/search?q=Laser Gun", route -> route.fulfill(
+                new Route.FulfillOptions()
+                        .setStatus(200)
+                        .setContentType("application/json")
+                        .setBody(MockResponse.RESPONSE)
+        ));
+
         page.navigate(BASE_URL_UI);
+        page.locator("[placeholder=Search]").fill("Laser Gun");
+        page.locator("button:has-text('Search')").click();
+
+        PlaywrightAssertions.assertThat(page.getByText("Laser Gun")).isVisible();
     }
 
-    @AfterAll
-    public static void tearDown() {
-
-        if(apiRequestContext != null) {
-            apiRequestContext.dispose();
-        }
-
-        browser.close();
-        context.close();
-        playwright.close();
-    }
-
-
-    @DisplayName("Check for known products")
+    @DisplayName("Getting a streamed list of products")
     @ParameterizedTest(name = "Checking product {0}")
     @MethodSource("products")
     void shouldReturnBetweenPriceRange(Product product) {
@@ -104,16 +126,9 @@ public class MakingAPITests {
                         .setHasText(Double.toString(product.price)));
 
         PlaywrightAssertions.assertThat(productCard).isVisible();
-
-//        Locator searchResultProduct = page.locator(".card")
-//                .filter(new Locator.FilterOptions().setHasText(product.name))
-//                .getByTestId("product-price");
-//
-//        Double searchResultPrice = Double.valueOf(searchResultProduct.textContent().replace("$", ""));
-//        assertThat(searchResultPrice).isEqualTo(product.price);
     }
 
-    @DisplayName("Register User")
+    @DisplayName("Post API test (valid case)")
     @Test
     void shouldRegisterUser() {
 
@@ -154,7 +169,7 @@ public class MakingAPITests {
         });
     }
 
-    @DisplayName("Missing email address")
+    @DisplayName("Post API test (invalid case)")
     @Test
     void shouldThrowErrorOnMissingEmailAddress() {
 
@@ -188,7 +203,7 @@ public class MakingAPITests {
         assertThat(responseObject.toString()).isEqualTo("{\"email\":[\"The email field is required.\"]}");
     }
 
-    @DisplayName("Sign in as known user ")
+    @DisplayName("Post API test data (valid case)")
     @Test
     void shouldSignIn() {
 
@@ -211,7 +226,7 @@ public class MakingAPITests {
         PlaywrightAssertions.assertThat(page.getByText("Here you can manage your profile, favorites and orders.")).isVisible();
     }
 
-    @DisplayName("Reject with incorrect password")
+    @DisplayName("Post API test data (invalid case)")
     @Test
     void shouldRejectWithIncorrectPassword() {
 

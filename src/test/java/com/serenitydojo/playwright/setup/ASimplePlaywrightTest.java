@@ -22,7 +22,7 @@ public class ASimplePlaywrightTest {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(
                 new BrowserType.LaunchOptions()
-                        .setHeadless(false)
+                        .setHeadless(true)
                         .setArgs(Arrays.asList("--no-sandbox","--start-maximized"))
         );
         page = browser.newPage();

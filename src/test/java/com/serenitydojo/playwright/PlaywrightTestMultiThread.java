@@ -22,7 +22,7 @@ public class PlaywrightTestMultiThread {
     protected static ThreadLocal<Browser> browser = ThreadLocal.withInitial(() ->
             playwright.get().chromium().launch(
                 new BrowserType.LaunchOptions()
-                .setHeadless(false)
+                .setHeadless(true)
                 .setArgs(Arrays.asList("--no-sandbox", "--start-maximized"))));
 
     protected BrowserContext context;

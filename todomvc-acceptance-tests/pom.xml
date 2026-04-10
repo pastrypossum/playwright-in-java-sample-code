@@ -14,6 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <allure.version>2.29.0</allure.version>
         <aspectj.version>1.9.21</aspectj.version>
+        <!-- executable used to run npm. Overridden on Windows via profile below -->
+        <npm.executable>npm</npm.executable>
     </properties>
 
     <dependencyManagement>
@@ -116,7 +118,8 @@
                         </goals>
                         <configuration>
                             <name>npm-install</name>
-                            <workingDir>${project.basedir}/../react-todomvc</workingDir>
+                            <workingDir>${project.basedir}\..\react-todomvc</workingDir>
+<!--                            <workingDir>C:\Users\USER\IdeaProjects\playwright-in-java-sample-code\react-todomvc\</workingDir>-->
                             <arguments>
                                 <argument>npm</argument>
                                 <argument>install</argument>
@@ -131,7 +134,8 @@
                         </goals>
                         <configuration>
                             <name>react-app</name>
-                            <workingDir>${project.basedir}/../react-todomvc</workingDir>
+                            <workingDir>${project.basedir}\..\react-todomvc</workingDir>
+<!--                            <workingDir>C:\Users\USER\IdeaProjects\playwright-in-java-sample-code\react-todomvc\</workingDir>-->
                             <waitForInterrupt>false</waitForInterrupt>
                             <healthcheckUrl>http://localhost:7002</healthcheckUrl>
                             <arguments>
@@ -209,5 +213,60 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Platform-specific overrides -->
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- keep property for compatibility if referenced elsewhere -->
+                <npm.executable>npm.cmd</npm.executable>
+            </properties>
+            <!-- On Windows override the process-exec plugin executions to run through cmd.exe
+                 because some environments require the shell to resolve .cmd wrappers. -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.bazaarvoice.maven.plugins</groupId>
+                        <artifactId>process-exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>npm-install</id>
+                                <configuration>
+                                    <workingDir>${project.basedir}\\..\\react-todomvc</workingDir>
+                                    <arguments>
+                                        <argument>cmd</argument>
+                                        <argument>/c</argument>
+                                        <argument>npm</argument>
+                                        <argument>install</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>start-app</id>
+                                <configuration>
+                                    <workingDir>${project.basedir}\\..\\react-todomvc</workingDir>
+                                    <waitForInterrupt>false</waitForInterrupt>
+                                    <healthcheckUrl>http://localhost:7002</healthcheckUrl>
+                                    <arguments>
+                                        <argument>cmd</argument>
+                                        <argument>/c</argument>
+                                        <argument>npm</argument>
+                                        <argument>run</argument>
+                                        <argument>serve</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

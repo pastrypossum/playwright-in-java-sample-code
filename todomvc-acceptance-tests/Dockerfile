@@ -1,5 +1,6 @@
 # Use OpenJDK 17 slim as the base image
-FROM openjdk:17-slim
+#FROM openjdk:17-slim
+FROM openjdk:24-ea-17-slim-bullseye
 
 # Install dependencies
 RUN apt-get update && \
@@ -35,7 +36,7 @@ RUN npx playwright install-deps
 RUN curl -I https://repo.maven.apache.org/maven2/
 
 # Set the working directory inside the container
-WORKDIR /tests
+WORKDIR .
 
 # Copy the Maven project files to the container
 COPY . .
